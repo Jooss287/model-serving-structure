@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slow-task-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slow-task-worker
+  template:
+    metadata:
+      labels:
+        app: slow-task-worker
+    spec:
+      containers:
+        - name: slow-task-worker
+          image: my-celery-worker
+          command:
+            [
+              "celery",
+              "-A",
+              "tasks",
+              "worker",
+              "--loglevel=info",
+              "--queues=slow_tasks",
+            ]
